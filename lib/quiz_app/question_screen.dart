@@ -19,12 +19,14 @@ class _QuestionScreenState extends State<QuestionScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text('The question...'),
-          SizedBox(
+          const SizedBox(
             height: 30,
           ),
-          currentQuestion.answers.map(answer) {
-            return AnswerButton(answer: answer, onSelectAnswer: () {});
-          },
+          ...currentQuestion.answers.map(
+            (answer) {
+              return AnswerButton(answer: answer, onSelectAnswer: () {});
+            },
+          ),
         ],
       ),
     );
