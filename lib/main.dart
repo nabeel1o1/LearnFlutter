@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutteroid_app/quiz_app/quiz.dart';
+import 'package:flutteroid_app/expense_tracker_app/expenses.dart';
 
 void main() {
-  runApp(const Quiz());
+  runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
+    theme: ThemeData(useMaterial3: true),
+    home: const Expenses(),
+  ),);
 }
