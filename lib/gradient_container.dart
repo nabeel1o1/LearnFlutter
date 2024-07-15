@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutteroid_app/dice_roller.dart';
-import 'package:flutteroid_app/quiz_app/start_screen.dart';
 
 const startAlignment = Alignment.topLeft;
 const endAlignment = Alignment.bottomRight;

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
 import '../models/expense.dart';
 
 class AddExpense extends StatefulWidget {
-  const AddExpense({super.key});
+  const AddExpense(this.onAddExpense, {super.key});
+
+  final void Function(Expense expense) onAddExpense;
 
   @override
   State<AddExpense> createState() => _AddExpenseState();
@@ -50,7 +50,17 @@ class _AddExpenseState extends State<AddExpense> {
           );
         },
       );
+      return;
     }
+
+    final expense = Expense(
+        title: _titleController.text,
+        amount: amount,
+        dateTime: _selectedDate!,
+        category: _selectedCategory);
+
+    widget.onAddExpense(expense);
+    Navigator.pop(context);
   }
 
   @override
@@ -63,7 +73,7 @@ class _AddExpenseState extends State<AddExpense> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 48, 16, 16),
       child: Column(
         children: [
           TextField(

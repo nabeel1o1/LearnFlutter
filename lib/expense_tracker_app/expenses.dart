@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutteroid_app/expense_tracker_app/widgets/add_expense.dart';
+import 'package:flutteroid_app/expense_tracker_app/widgets/chart/Chart.dart';
 import 'package:flutteroid_app/expense_tracker_app/widgets/expenses_list/expenses_list.dart';
 import 'package:flutteroid_app/expense_tracker_app/models/expense.dart';
 
@@ -11,6 +12,36 @@ class Expenses extends StatefulWidget {
 }
 
 class _ExpensesState extends State<Expenses> {
+  void Function(Expense expense)? addExpense;
+
+  void _onAddExpense(Expense expense) {
+    setState(() {
+      expenses.add(expense);
+    });
+  }
+
+  void _removeExpense(Expense expense) {
+    final expenseIndex = expenses.indexOf(expense);
+    setState(() {
+      expenses.remove(expense);
+    });
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Expense deleted'),
+        duration: const Duration(seconds: 3),
+        action: SnackBarAction(
+          label: 'Undo',
+          onPressed: () {
+            setState(() {
+              expenses.insert(expenseIndex, expense);
+            });
+          },
+        ),
+      ),
+    );
+  }
+
   final List<Expense> expenses = [
     Expense(
         title: 'Flutter course',
@@ -27,12 +58,22 @@ class _ExpensesState extends State<Expenses> {
   void _openAddExpenseOverlay() {
     showModalBottomSheet(
       context: context,
-      builder: (ctx) => const AddExpense(),
+      isScrollControlled: true,
+      builder: (ctx) => AddExpense(_onAddExpense),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    Widget mainContent = const Center(
+      child: Text('No expenses found. Start adding some!'),
+    );
+    if (expenses.isNotEmpty) {
+      mainContent = ExpensesList(
+        expenses,
+        onRemoveExpense: _removeExpense,
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('Expense Tracker'),
@@ -45,10 +86,8 @@ class _ExpensesState extends State<Expenses> {
       ),
       body: Column(
         children: [
-          const Text('The chart'),
-          Expanded(
-            child: ExpensesList(expenses),
-          ),
+          Chart(expenses: expenses),
+          Expanded(child: mainContent),
         ],
       ),
     );
