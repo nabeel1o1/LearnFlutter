@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutteroid_app/meals_app/models/meal.dart';
 import 'package:flutteroid_app/meals_app/screens/categories_screen.dart';
+import 'package:flutteroid_app/meals_app/screens/filters_screen.dart';
 import 'package:flutteroid_app/meals_app/screens/meals_screen.dart';
 import 'package:flutteroid_app/meals_app/widgets/main_drawer.dart';
 
@@ -16,11 +17,13 @@ class _TabScreenState extends State<TabScreen> {
 
   void _onDrawerItemSelect(String item) {
     Navigator.pop(context);
-    if(item == 'filters') {
-
-    } else {
-
-    }
+    if (item == 'filters') {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (ctx) => const FiltersScreen(),
+        ),
+      );
+    } else {}
   }
 
   void _showInfoMessage(String message) {
