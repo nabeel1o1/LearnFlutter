@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutteroid_app/meals_app/data/dummy_data.dart';
-import 'package:flutteroid_app/meals_app/screens/categories_screen.dart';
-import 'package:flutteroid_app/meals_app/screens/meals_screen.dart';
+import 'package:flutteroid_app/meals_app/screens/tab_screen.dart';
 
 var kColorScheme =
     ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 96, 59, 181));
@@ -52,7 +50,7 @@ void main() {
             ),
       ),
       themeMode: ThemeMode.system,
-      home: const CategoriesScreen(),
+      home: const TabScreen(),
     ),
   );
 }
