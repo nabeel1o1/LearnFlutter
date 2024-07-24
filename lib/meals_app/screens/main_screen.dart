@@ -34,7 +34,6 @@ class _MainScreenState extends State<MainScreen> {
           builder: (ctx) => FiltersScreen(filterState: _selectedFilters),
         ),
       );
-      print('Selected Filters : $selectedFilters');
       setState(() {
         _selectedFilters = selectedFilters ?? kDefaultFilters;
       });
