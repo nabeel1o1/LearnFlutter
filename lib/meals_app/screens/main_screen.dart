@@ -13,14 +13,14 @@ const kDefaultFilters = {
   Filter.vegan: false
 };
 
-class TabScreen extends StatefulWidget {
-  const TabScreen({super.key});
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
 
   @override
-  State<TabScreen> createState() => _TabScreenState();
+  State<MainScreen> createState() => _MainScreenState();
 }
 
-class _TabScreenState extends State<TabScreen> {
+class _MainScreenState extends State<MainScreen> {
   final List<Meal> _favoriteMeals = [];
 
   Map<Filter, bool> _selectedFilters = kDefaultFilters;
