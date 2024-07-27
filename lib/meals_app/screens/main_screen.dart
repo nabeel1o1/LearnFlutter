@@ -14,14 +14,14 @@ const kDefaultFilters = {
   Filter.vegan: false
 };
 
-class MainScreen extends ConsumerStatefulWidget {
-  const MainScreen({super.key});
+class MealsMainScreen extends ConsumerStatefulWidget {
+  const MealsMainScreen({super.key});
 
   @override
-  ConsumerState<MainScreen> createState() => _MainScreenState();
+  ConsumerState<MealsMainScreen> createState() => _MainScreenState();
 }
 
-class _MainScreenState extends ConsumerState<MainScreen> {
+class _MainScreenState extends ConsumerState<MealsMainScreen> {
 
   void _onDrawerItemSelect(String item) {
     Navigator.pop(context);

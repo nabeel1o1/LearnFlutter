@@ -52,7 +52,7 @@ void main() {
               ),
         ),
         themeMode: ThemeMode.system,
-        home: const MainScreen(),
+        home: const MealsMainScreen(),
       ),
     ),
   );
