@@ -6,11 +6,9 @@ import 'package:flutteroid_app/meals_app/screens/meals_screen.dart';
 import 'package:flutteroid_app/meals_app/widgets/category_grid_item.dart';
 
 class CategoriesScreen extends StatelessWidget {
-  const CategoriesScreen({required this.filteredMeals, required this.onToggleFavorite, super.key});
+  const CategoriesScreen({required this.filteredMeals, super.key});
 
   final List<Meal> filteredMeals;
-
-  final void Function(Meal meal) onToggleFavorite;
 
   void _selectCategory(BuildContext context, Category category) {
     print('Filtered Meal : ${this.filteredMeals}');
@@ -22,7 +20,6 @@ class CategoriesScreen extends StatelessWidget {
         builder: (ctx) => MealsScreen(
           title: category.title,
           meals: filteredMeals,
-          onToggleFavorite: onToggleFavorite,
         ),
       ),
     );
