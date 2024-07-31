@@ -1,30 +1,58 @@
-import 'package:flutter/material.dart';
-import 'package:flutteroid_app/grocery_app/data/categories.dart';
-import 'package:flutteroid_app/grocery_app/models/category.dart';
-import 'package:flutteroid_app/grocery_app/models/grocery_item.dart';
+import 'dart:convert';
 
-class AddGroceryItemScreen extends StatefulWidget {
-  const AddGroceryItemScreen({super.key});
+import 'package:flutter/material.dart';
+import 'package:flutteroid_app/shopping_app/data/categories.dart';
+import 'package:flutteroid_app/shopping_app/models/category.dart';
+import 'package:flutteroid_app/shopping_app/models/grocery_item.dart';
+import 'package:http/http.dart' as http;
+
+class AddNewItemScreen extends StatefulWidget {
+  const AddNewItemScreen({super.key});
 
   @override
-  State<AddGroceryItemScreen> createState() => _AddGroceryItemScreenState();
+  State<AddNewItemScreen> createState() => _AddNewItemScreenState();
 }
 
-class _AddGroceryItemScreenState extends State<AddGroceryItemScreen> {
+class _AddNewItemScreenState extends State<AddNewItemScreen> {
   final _formKey = GlobalKey<FormState>();
   var _enteredName = "";
   var _enteredQuantity = 1;
   var _selectedCategory = categories[Categories.vegetables];
+  var isSending = false;
 
-  void _saveItem() {
+  void _saveItem() async {
     final isValid = _formKey.currentState!.validate();
     if (isValid) {
       _formKey.currentState!.save();
-      Navigator.of(context).pop(GroceryItem(
-          id: DateTime.now.toString(),
-          name: _enteredName,
-          quantity: _enteredQuantity,
-          category: _selectedCategory!));
+      setState(() {
+        isSending = true;
+      });
+      final url = Uri.https('flutter-prep-f57ce-default-rtdb.firebaseio.com',
+          'shopping-list.json');
+      var response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(
+          {
+            'name': _enteredName,
+            'quantity': _enteredQuantity,
+            'category': _selectedCategory!.title,
+          },
+        ),
+      );
+      if (response.statusCode == 200) {
+        if (!context.mounted) {
+          return;
+        }
+
+        final Map<String, dynamic> resData = json.decode(response.body);
+
+        Navigator.of(context).pop(GroceryItem(
+            id: resData['name'],
+            name: _enteredName,
+            quantity: _enteredQuantity,
+            category: _selectedCategory!));
+      }
     }
   }
 

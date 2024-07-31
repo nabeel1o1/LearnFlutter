@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutteroid_app/grocery_app/models/category.dart';
+import 'package:flutteroid_app/shopping_app/models/category.dart';
 
 const categories = {
   Categories.vegetables: Category(

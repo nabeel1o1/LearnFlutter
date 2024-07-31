@@ -1,5 +1,4 @@
-
-import 'package:flutteroid_app/grocery_app/models/category.dart';
+import 'package:flutteroid_app/shopping_app/models/category.dart';
 
 class GroceryItem {
   const GroceryItem({
