@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutteroid_app/meals_app/models/meal.dart';
 import 'package:flutteroid_app/meals_app/providers/favorites_provider.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 class MealDetailScreen extends ConsumerWidget {
   const MealDetailScreen({required this.meal, super.key});

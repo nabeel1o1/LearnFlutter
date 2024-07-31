@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutteroid_app/grocery_app/models/category.dart';
 
-var categories = {
+const categories = {
   Categories.vegetables: Category(
     'Vegetables',
     Color.fromARGB(255, 0, 255, 128),
