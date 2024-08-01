@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutteroid_app/favorite_places_app/screens/home_screen.dart';
 import 'package:flutteroid_app/shopping_app/screens/shopping_main_screen.dart';
 
 var kColorScheme =
@@ -52,7 +53,7 @@ void main() {
               ),
         ),
         themeMode: ThemeMode.system,
-        home: const ShoppingMainScreen(),
+        home: const HomeScreen(),
       ),
     ),
   );
