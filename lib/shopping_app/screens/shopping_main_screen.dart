@@ -18,33 +18,56 @@ class _ShoppingMainScreenState extends State<ShoppingMainScreen> {
   List<GroceryItem> _groceryItems = groceryItems;
 
   var _isLoading = true;
+  String? _error;
 
   void _loadGroceryItems() async {
     final List<GroceryItem> loadedItems = [];
 
     final url = Uri.https(
         'flutter-prep-f57ce-default-rtdb.firebaseio.com', 'shopping-list.json');
-    final response = await http.get(url);
 
-    final Map<String, dynamic> dataList = json.decode(response.body);
+    try {
+      final response = await http.get(url);
 
-    for (final item in dataList.entries) {
-      final category = categories.entries
-          .firstWhere(
-              (catItem) => catItem.value.title == item.value['category'])
-          .value;
-      loadedItems.add(
-        GroceryItem(
-            id: item.key,
-            name: item.value['name'],
-            quantity: item.value['quantity'],
-            category: category),
-      );
+      if (response.statusCode >= 400) {
+        setState(() {
+          _error = 'Failed to fetch data. Please try again later';
+          _isLoading = false;
+        });
+      }
+
+      if (response.body == 'null') {
+        setState(() {
+          _isLoading = false;
+        });
+        return;
+      }
+
+      final Map<String, dynamic> dataList = json.decode(response.body);
+
+      for (final item in dataList.entries) {
+        final category = categories.entries
+            .firstWhere(
+                (catItem) => catItem.value.title == item.value['category'])
+            .value;
+        loadedItems.add(
+          GroceryItem(
+              id: item.key,
+              name: item.value['name'],
+              quantity: item.value['quantity'],
+              category: category),
+        );
+      }
+      setState(() {
+        _groceryItems = loadedItems;
+        _isLoading = false;
+      });
+    } catch (error) {
+      setState(() {
+        _error = 'Something went wrong. Please try again later';
+        _isLoading = false;
+      });
     }
-    setState(() {
-      _groceryItems = loadedItems;
-      _isLoading = false;
-    });
   }
 
   void addGroceryItem() async {
@@ -58,10 +81,34 @@ class _ShoppingMainScreenState extends State<ShoppingMainScreen> {
     }
   }
 
-  void removeItem(GroceryItem groceryItem) {
+  void removeItem(GroceryItem groceryItem) async {
+    final index = _groceryItems.indexOf(groceryItem);
     setState(() {
       _groceryItems.remove(groceryItem);
     });
+    final url = Uri.https('flutter-prep-f57ce-default-rtdb.firebaseio.com',
+        'shopping-list/${groceryItem.id}.json');
+    final response = await http.delete(url);
+
+    if (response.statusCode >= 400) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Unable to delete the data.'),
+            action: SnackBarAction(
+              label: 'Try Again',
+              onPressed: () {
+                removeItem(groceryItem);
+              },
+            ),
+          ),
+        );
+      }
+      setState(() {
+        _groceryItems.insert(index, groceryItem);
+      });
+    }
   }
 
   @override
@@ -75,12 +122,6 @@ class _ShoppingMainScreenState extends State<ShoppingMainScreen> {
     Widget content = const Center(
       child: Text('No items added yet'),
     );
-
-    if (_isLoading) {
-      content = const Center(
-        child: CircularProgressIndicator(),
-      );
-    }
 
     if (_groceryItems.isNotEmpty) {
       content = ListView.builder(
@@ -106,6 +147,13 @@ class _ShoppingMainScreenState extends State<ShoppingMainScreen> {
         },
       );
     }
+
+    if (_error != null) {
+      content = Center(
+        child: Text(_error!),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your Groceries'),
@@ -116,7 +164,16 @@ class _ShoppingMainScreenState extends State<ShoppingMainScreen> {
           )
         ],
       ),
-      body: content,
+      body: Stack(
+        children: [
+          content,
+          _isLoading
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : Container(),
+        ],
+      ),
     );
   }
 }
