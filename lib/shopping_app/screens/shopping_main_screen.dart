@@ -15,7 +15,9 @@ class ShoppingMainScreen extends StatefulWidget {
 }
 
 class _ShoppingMainScreenState extends State<ShoppingMainScreen> {
-  List<GroceryItem> _groceryItems = groceryItems;
+
+  final List<GroceryItem> _groceryItems = groceryItems;
+
   late Future<List<GroceryItem>> _loadedItems;
 
   Future<List<GroceryItem>> _loadGroceryItems() async {

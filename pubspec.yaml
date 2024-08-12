@@ -41,6 +41,9 @@ dependencies:
   transparent_image: ^2.0.1
   flutter_riverpod: ^2.5.1
   http: ^1.2.2
+  image_picker: ^1.1.2
+  location: ^6.0.2
+  geocoding: ^3.0.0
 
 dev_dependencies:
   flutter_test:
