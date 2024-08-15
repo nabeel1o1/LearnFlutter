@@ -1,30 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutteroid_app/favorite_places_app/models/place.dart';
+import 'package:flutteroid_app/favorite_places_app/screens/map_screen.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart' as loc;
 
 class LocationInput extends StatefulWidget {
-  const LocationInput({super.key});
+  const LocationInput({required this.onSelectLocation, super.key});
+
+  final void Function(PlaceLocation location) onSelectLocation;
 
   @override
   State<LocationInput> createState() => _LocationInputState();
 }
 
 class _LocationInputState extends State<LocationInput> {
-
-  String get locationImage {
-    if (_pickedLocation == null) {
-      return '';
-    }
-    double lat = _pickedLocation!.latitude;
-    double long = _pickedLocation!.longitude;
-    return 'https://api.maptiler.com/maps/streets-v2/static/$lat,$long,1.154818109052104/400x300.png?key=0oiYhR6bkYDwUSwIf0dn';
-  }
-
   String? currentAddress;
 
   PlaceLocation? _pickedLocation;
   var _isGettingLocation = false;
+
+  void _getAddressFromLatLng(double lat, double long) async {
+    List<Placemark> placeMarks = await placemarkFromCoordinates(lat, long);
+
+    if (placeMarks.isNotEmpty) {
+      setState(() {
+        currentAddress = placeMarks[0].toString();
+
+        _pickedLocation = PlaceLocation(
+            latitude: lat, longitude: long, address: currentAddress!);
+        _isGettingLocation = false;
+
+        widget.onSelectLocation(_pickedLocation!);
+      });
+    }
+  }
 
   void _getCurrentLocation() async {
     loc.Location location = loc.Location();
@@ -59,24 +69,34 @@ class _LocationInputState extends State<LocationInput> {
     final long = locationData.longitude;
 
     if (lat != null && long != null) {
-      List<Placemark> placeMarks = await placemarkFromCoordinates(
-          locationData.latitude!, locationData.longitude!);
-
-      if (placeMarks.isNotEmpty) {
-        currentAddress = placeMarks[0].toString();
-      }
+      _getAddressFromLatLng(lat, long);
     } else {
       setState(() {
         _isGettingLocation = false;
       });
       return;
     }
+  }
 
-    setState(() {
-      _pickedLocation = PlaceLocation(
-          latitude: lat, longitude: long, address: currentAddress!);
-      _isGettingLocation = false;
-    });
+  void _getLocationViaMap() async {
+    final selectedLocation = await Navigator.of(context).push<LatLng>(
+      MaterialPageRoute(
+        builder: (ctx) {
+          return const MapScreen();
+        },
+      ),
+    );
+
+    if (selectedLocation != null) {
+      setState(() {
+        _isGettingLocation = true;
+      });
+
+      _getAddressFromLatLng(
+        selectedLocation.latitude,
+        selectedLocation.longitude,
+      );
+    }
   }
 
   @override
@@ -89,15 +109,6 @@ class _LocationInputState extends State<LocationInput> {
           ),
     );
 
-    if (_pickedLocation != null) {
-      previewContent = Image.network(
-        locationImage,
-        fit: BoxFit.cover,
-        width: double.infinity,
-        height: double.infinity,
-      );
-    }
-
     if (_isGettingLocation) {
       previewContent = const CircularProgressIndicator();
     }
@@ -105,9 +116,12 @@ class _LocationInputState extends State<LocationInput> {
     return Column(
       children: [
         Container(
+          padding: const EdgeInsets.all(10),
           alignment: Alignment.center,
-          height: 170,
           width: double.infinity,
+          constraints: const BoxConstraints(
+            minHeight: 170,
+          ),
           decoration: BoxDecoration(
             border: Border.all(
               width: 1,
@@ -125,10 +139,9 @@ class _LocationInputState extends State<LocationInput> {
               onPressed: _getCurrentLocation,
             ),
             TextButton.icon(
-              icon: const Icon(Icons.location_on),
-              label: const Text('Select on Map'),
-              onPressed: () {},
-            ),
+                icon: const Icon(Icons.location_on),
+                label: const Text('Select on Map'),
+                onPressed: _getLocationViaMap),
           ],
         ),
       ],
