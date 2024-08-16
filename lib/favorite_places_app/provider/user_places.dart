@@ -43,7 +43,8 @@ class UserPlacesNotifier extends StateNotifier<List<Place>> {
   }
 
   void addPlace(String title, File image, PlaceLocation location) async {
-    final appDir = await sysPath.getApplicationCacheDirectory();
+    
+    final appDir = await sysPath.getApplicationDocumentsDirectory();
 
     final fileName = path.basename(image.path);
 
