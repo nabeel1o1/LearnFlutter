@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutteroid_app/chat_app/screens/login_screen.dart';
 import 'package:flutteroid_app/favorite_places_app/screens/home_screen.dart';
 import 'package:flutteroid_app/shopping_app/screens/shopping_main_screen.dart';
 
@@ -53,7 +54,7 @@ void main() {
               ),
         ),
         themeMode: ThemeMode.system,
-        home: const HomeScreen(),
+        home: const LoginScreen(),
       ),
     ),
   );
