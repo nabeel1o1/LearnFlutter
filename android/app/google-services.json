@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "156512188752",
+    "firebase_url": "https://flutter-prep-f57ce-default-rtdb.firebaseio.com",
+    "project_id": "flutter-prep-f57ce",
+    "storage_bucket": "flutter-prep-f57ce.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:156512188752:android:def0405c3fc6896f115455",
+        "android_client_info": {
+          "package_name": "com.example.flutteroid.flutteroid_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBP3gmNjnIeIbwPn5MN0t4v28qYukJacDU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
