@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutteroid_app/chat_app/screens/chat_screen.dart';
 import 'package:flutteroid_app/chat_app/screens/login_screen.dart';
+import 'package:flutteroid_app/chat_app/screens/splash_screen.dart';
 import 'package:flutteroid_app/favorite_places_app/screens/home_screen.dart';
 import 'package:flutteroid_app/shopping_app/screens/shopping_main_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -60,7 +63,16 @@ void main() async {
               ),
         ),
         themeMode: ThemeMode.system,
-        home: const LoginScreen(),
+        home: StreamBuilder(stream: FirebaseAuth.instance.authStateChanges(), builder: (ctx, snapShot) {
+          if (snapShot.connectionState == ConnectionState.waiting) {
+            return const SplashScreen();
+          }
+          if (snapShot.hasData) {
+            return const ChatScreen();
+          } else {
+            return const LoginScreen();
+          }
+      }),
       ),
     ),
   );
